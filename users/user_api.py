@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from django.http import HttpResponseRedirect, HttpResponse
 
+from django_filters.rest_framework import DjangoFilterBackend
 
 class  UserSerialiser(serializers.HyperlinkedModelSerializer):
     
@@ -16,7 +17,12 @@ class  UserSerialiser(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name','company_name', 'city', 'state', 'zip','email', 'web', 'age')
 
+
 class UserViewSet(viewsets.ModelViewSet):
 
-    queryset = User.objects.all()
     serializer_class = UserSerialiser
+    queryset = User.objects.all()
+    
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('first_name', 'last_name')
+    
