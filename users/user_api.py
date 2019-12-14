@@ -13,6 +13,8 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import render
 
+import django_filters
+from django_filters import filters
 
 class  UserSerialiser(serializers.HyperlinkedModelSerializer):
     
@@ -27,23 +29,18 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerialiser
     
     #search 
-    filter_backends = (DjangoFilterBackend,)
+    search_fields = ('first_name', 'last_name')
+    filter_backends = (DjangoFilterBackend,SearchFilter)
     
     # pagination 
-
-    # filter_fields = ('first_name', 'last_name')
     pagination_class = LimitOffsetPagination
     
 
     def get_queryset(self):
         queryset = User.objects.all()
         sort_by = self.request.query_params.get('sort', None)
-        name_search = self.request.query_params.get('name', None) 
 
         if sort_by is not None:
             queryset = queryset.order_by(sort_by)
         
-        if name_search is not None:
-            queryset = queryset.filter(first_name=name_search) 
-
         return queryset
