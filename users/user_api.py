@@ -8,9 +8,11 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from django_filters.rest_framework import DjangoFilterBackend
 
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpRequest
 
 from django_filters.rest_framework import DjangoFilterBackend
+from django.shortcuts import render
+
 
 class  UserSerialiser(serializers.HyperlinkedModelSerializer):
     
@@ -23,9 +25,25 @@ class  UserSerialiser(serializers.HyperlinkedModelSerializer):
 class UserViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserSerialiser
-    queryset = User.objects.all()
     
+    #search 
     filter_backends = (DjangoFilterBackend,)
-    filter_fields = ('first_name', 'last_name')
+    
+    # pagination 
+
+    # filter_fields = ('first_name', 'last_name')
     pagination_class = LimitOffsetPagination
-    # paginate_by = 4
+    
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        sort_by = self.request.query_params.get('sort', None)
+        name_search = self.request.query_params.get('name', None) 
+
+        if sort_by is not None:
+            queryset = queryset.order_by(sort_by)
+        
+        if name_search is not None:
+            queryset = queryset.filter(first_name=name_search) 
+
+        return queryset
