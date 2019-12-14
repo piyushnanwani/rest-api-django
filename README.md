@@ -24,11 +24,8 @@ https://www.getpostman.com/
 1) GET /api/users : This returns list of users
 You can also search user by name as a substring in First Name or Last Name 
 
----
 /api/users - GET​ ​ - To list the users
 /api/users?page=1&limit=10&name=James&sort=-age
-
----
 
 2) POST /api/users/ 
 
