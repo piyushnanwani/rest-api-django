@@ -1,3 +1,4 @@
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import serializers, viewsets
 from .models import User
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,6 +19,7 @@ class  UserSerialiser(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'first_name', 'last_name','company_name', 'city', 'state', 'zip','email', 'web', 'age')
 
 
+
 class UserViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserSerialiser
@@ -25,4 +27,5 @@ class UserViewSet(viewsets.ModelViewSet):
     
     filter_backends = (DjangoFilterBackend,)
     filter_fields = ('first_name', 'last_name')
-    
+    pagination_class = LimitOffsetPagination
+    # paginate_by = 4
